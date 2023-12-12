@@ -1,0 +1,46 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      php: 7.4
+    commands:
+      - echo Installing dependencies
+      # Add any additional commands to install dependencies here
+      # Install AWS CLI
+      - apt-get update && apt-get install -y awscli
+
+  pre_build:
+    commands:
+      - echo Configuring AWS CLI
+      # Use existing AWS IAM user credentials
+      - CLI_CREDENTIALS=$(aws secretsmanager get-secret-value --secret-id arn:aws:secretsmanager:ap-south-1:469553588024:secret:aws-cli-user-keys-KVVEvt --region ap-south-1 --output json | jq -r '.SecretString')
+      - AWS_ACCESS_KEY_ID=$(echo "$CLI_CREDENTIALS" | jq -r '.ACCESS_KEY')
+      - AWS_SECRET_ACCESS_KEY=$(echo "$CLI_CREDENTIALS" | jq -r '.SECRET_KEY')
+      # Configure AWS CLI
+      - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+      - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+
+  build:
+    commands:
+      - echo Building WordPress app
+      # Your remaining AWS CLI commands here
+      - SECRET_ID="arn:aws:secretsmanager:ap-south-1:469553588024:secret:mysql-r4LVxm"
+      - REGION="ap-south-1"
+      # Fetch database credentials from AWS Secrets Manager
+      - DB_CREDENTIALS=$(aws secretsmanager get-secret-value --secret-id $SECRET_ID --region $REGION --output json | jq -r '.SecretString')
+      # Extract database connection details from the JSON response
+      - DB_HOST=$(echo "$DB_CREDENTIALS" | jq -r '.DB_HOST')
+      - DB_USERNAME=$(echo "$DB_CREDENTIALS" | jq -r '.DB_USERNAME')
+      - DB_PASSWORD=$(echo "$DB_CREDENTIALS" | jq -r '.DB_PASSWORD')
+      # Add other fields as needed
+
+  post_build:
+    commands:
+      - echo Retrieving database credentials from AWS Secrets Manager
+      # Update wp-config.php with the retrieved credentials
+      - sed -i "s/define('DB_HOST', '.*');/define('DB_HOST', '$DB_HOST');/" wordpress-6.4.2/wordpress/wp-config.php
+      - sed -i "s/define('DB_USER', '.*');/define('DB_USER', '$DB_USERNAME');/" wordpress-6.4.2/wordpress/wp-config.php
+      - sed -i "s/define('DB_PASSWORD', '.*');/define('DB_PASSWORD', '$DB_PASSWORD');/" wordpress-6.4.2/wordpress/wp-config.php
+      - sed -i "s/define('DB_NAME', '.*');/define('DB_NAME', '$DB_NAME');/" wordpress-6.4.2/wordpress/wp-config.php
+      # Add other sed commands for additional fields
