@@ -43,3 +43,7 @@ phases:
       - sed -i "s/define('DB_PASSWORD', '.*');/define('DB_PASSWORD', '$DB_PASSWORD');/" wordpress-6.4.2/wordpress/wp-config.php
       - sed -i "s/define('DB_NAME', '.*');/define('DB_NAME', '$DB_NAME');/" wordpress-6.4.2/wordpress/wp-config.php
       # Add other sed commands for additional fields
+
+artifacts:
+  files:
+    - "**/*"
