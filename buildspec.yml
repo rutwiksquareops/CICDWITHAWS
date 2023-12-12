@@ -29,11 +29,13 @@ phases:
       # Fetch database credentials from AWS Secrets Manager
       - DB_CREDENTIALS=$(aws secretsmanager get-secret-value --secret-id $SECRET_ID --region $REGION --output json | jq -r '.SecretString')
       # Extract database connection details from the JSON response
-      - DB_HOST=$(echo "$DB_CREDENTIALS" | jq -r '.DB_HOST')
-      - DB_USERNAME=$(echo "$DB_CREDENTIALS" | jq -r '.DB_USERNAME')
-      - DB_PASSWORD=$(echo "$DB_CREDENTIALS" | jq -r '.DB_PASSWORD')
+      - DB_HOST=$(echo $DB_CREDENTIALS | jq -r '.DB_HOST')
+      - DB_USERNAME=$(echo $DB_CREDENTIALS | jq -r '.DB_USERNAME')
+      - DB_PASSWORD=$(echo $DB_CREDENTIALS | jq -r '.DB_PASSWORD')
       # Add other fields as needed
       - echo $DB_HOST
+      - echo $DB_USERNAME
+      - echo $DB_CREDENTIALS
       - echo Retrieving database credentials from AWS Secrets Manager
       # Update wp-config.php with the retrieved credentials
       - echo $DB_USERNAME
