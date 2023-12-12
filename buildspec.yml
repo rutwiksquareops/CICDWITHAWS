@@ -33,7 +33,7 @@ phases:
       - DB_USERNAME=$(echo "$DB_CREDENTIALS" | jq -r '.DB_USERNAME')
       - DB_PASSWORD=$(echo "$DB_CREDENTIALS" | jq -r '.DB_PASSWORD')
       # Add other fields as needed
-      - echo '$DB_HOST'
+      - echo $DB_HOST
   post_build:
     commands:
       - echo Retrieving database credentials from AWS Secrets Manager
