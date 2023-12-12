@@ -2,8 +2,7 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      php: 7.4
+    
     commands:
       - echo Installing dependencies
       # Add any additional commands to install dependencies here
