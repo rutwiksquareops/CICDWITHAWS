@@ -32,13 +32,10 @@ phases:
       - DB_HOST=$(echo $DB_CREDENTIALS | jq -r '.DB_HOST')
       - DB_USERNAME=$(echo $DB_CREDENTIALS | jq -r '.DB_USER')
       - DB_PASSWORD=$(echo $DB_CREDENTIALS | jq -r '.DB_PASSWORD')
+      - DB_NAME=$(echo $DB_CREDENTIALS | jq -r '.DB_NAME')
       # Add other fields as needed
-      - echo $DB_HOST
-      - echo $DB_USERNAME
-      - echo $DB_CREDENTIALS
       - echo Retrieving database credentials from AWS Secrets Manager
       # Update wp-config.php with the retrieved credentials
-      - echo $DB_USERNAME
       - sudo sed -i "s/define('DB_HOST', '.*');/define('DB_HOST', '$DB_HOST');/" wp-config.php
       - sudo sed -i "s/define('DB_USER', '.*');/define('DB_USER', '$DB_USERNAME');/" wp-config.php
       - sudo sed -i "s/define('DB_PASSWORD', '.*');/define('DB_PASSWORD', '$DB_PASSWORD');/" wp-config.php
