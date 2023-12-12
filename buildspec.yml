@@ -40,10 +40,10 @@ phases:
       # - sudo sed -i "s/define('DB_USER', '.*');/define('DB_USER', '$DB_USERNAME');/" wp-config.php
       # - sudo sed -i "s/define('DB_PASSWORD', '.*');/define('DB_PASSWORD', '$DB_PASSWORD');/" wp-config.php
       # - sudo sed -i "s/define('DB_NAME', '.*');/define('DB_NAME', '$DB_NAME');/" wp-config.php
-      - sudo sed -i "s/^.*DB_USER.*$/define('DB_USER', '$USER_NAME');/" wp-config.php
+      - sudo sed -i "s/^.*DB_USER.*$/define('DB_USER', '$DB_USERNAME');/" wp-config.php
       - sudo sed -i "s/^.*DB_PASSWORD.*$/define('DB_PASSWORD', '$DB_PASSWORD');/" wp-config.php
       - sudo sed -i "s/^.*DB_NAME.*$/define('DB_NAME', '$DB_NAME');/" wp-config.php
-      - sudo sed -i "s/^.*DB_NAME.*$/define('DB_HOST', '$DB_HOST');/" wp-config.php
+      - sudo sed -i "s/^.*DB_HOST.*$/define('DB_HOST', '$DB_HOST');/" wp-config.php
   post_build:
     commands:
       
